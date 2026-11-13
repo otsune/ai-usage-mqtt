@@ -1,0 +1,29 @@
+# Linux: the server deliberately binds loopback. Host networking preserves
+# that invariant and avoids exposing the anonymous broker WS listener.
+services:
+  broker:
+    image: eclipse-mosquitto:2
+    network_mode: host
+    user: "${USAGE_UID:-1000}:${USAGE_GID:-1000}"
+    volumes:
+      - ./.runtime/broker-config:/mosquitto/config:ro
+      - ./.runtime/broker-data:/mosquitto/data
+    restart: unless-stopped
+  usage:
+    build: .
+    network_mode: host
+    user: "${USAGE_UID:-1000}:${USAGE_GID:-1000}"
+    depends_on:
+      - broker
+    environment:
+      USAGE_PORT: "${USAGE_PORT:-8788}"
+      USAGE_PUBLIC_ORIGIN: "${USAGE_PUBLIC_ORIGIN:-https://usage.example.invalid}"
+      USAGE_AUTH_MODULE: /app/dist/usage/auth-tailscale.mjs
+      USAGE_CONFIG: /config/config.json
+      USAGE_STATE_FILE: /state/state.json
+      USAGE_COLLECTOR_TOKENS_FILE: /config/collector-hashes.json
+      USAGE_READER_TOKENS_FILE: /config/reader-hashes.json
+    volumes:
+      - ./.runtime/config:/config:ro
+      - ./.runtime/state:/state
+    restart: unless-stopped

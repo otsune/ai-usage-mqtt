@@ -1,0 +1,51 @@
+{
+  "name": "ai-usage-mqtt",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Unlicense",
+  "description": "Standalone AI subscription usage collection, HTTP API and MQTT delivery",
+  "engines": {
+    "node": ">=22.16"
+  },
+  "workspaces": [
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:usage && npm run build:collectors",
+    "build:usage": "node scripts/build-usage.mjs",
+    "build:collectors": "node scripts/build-collectors.mjs",
+    "start": "node dist/usage/start.mjs",
+    "dev": "tsx services/usage/src/start.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "init": "node scripts/init.mjs",
+    "check:separation": "node scripts/check-separation.mjs",
+    "test:broker": "node scripts/test-broker.mjs"
+  },
+  "dependencies": {
+    "@fastify/websocket": "11.3.4",
+    "fastify": "5.12.8",
+    "mqtt": "5.16.1",
+    "ws": "8.22.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "@types/ws": "8.18.2",
+    "esbuild": "0.28.2",
+    "prettier": "3.9.9",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "files": [
+    "dist",
+    "deploy",
+    "compose.yaml",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ]
+}

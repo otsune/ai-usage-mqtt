@@ -1,0 +1,15 @@
+[Unit]
+Description=AI usage collection and MQTT delivery
+After=network-online.target
+
+[Service]
+# Adjust this path to the standalone checkout. No Fire checkout is required.
+WorkingDirectory=%h/projects/ai-usage-mqtt
+EnvironmentFile=%h/projects/ai-usage-mqtt/.runtime/native.env
+ExecStart=/usr/bin/node dist/usage/start.mjs
+Restart=on-failure
+RestartSec=10
+UMask=0077
+
+[Install]
+WantedBy=default.target

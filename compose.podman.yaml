@@ -1,0 +1,5 @@
+services:
+  broker:
+    userns_mode: keep-id
+  usage:
+    userns_mode: keep-id
